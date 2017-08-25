@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Farmshelf wifi setup</title>
+  </head>
+  <body>
+    <h1>Farmshelf wifi setup</h1>
+    <form>
+      <select>
+        {% for ssid in ssids %}
+          <option value="{{ ssid[0] }}">{{ ssid[0] }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Go</button>
+    <form>
+  </body>
+</html>
