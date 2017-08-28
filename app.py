@@ -29,8 +29,8 @@ def ssid_select():
 
             return redirect(url_for('ssid_select'))
 
-@app.route('/public/<str:filepath>')
-def static(filepath):
+@app.route('/public/<filepath>')
+def static_file(filepath):
     return app.send_static_file('public/' + filepath)
 
 @app.route('/<path:dummy>')
