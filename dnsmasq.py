@@ -14,12 +14,12 @@ server=/localnet/{0}
 local=/localnet/
 address=/#/{0}
 domain=localnet
-interface=wlan0
+interface={2}
 dhcp-range={1}
 dhcp-option=3,{0}
 dhcp-option=6,{0}
 dhcp-authoritative
-bind-interfaces""".format(config.dnsmasq.gateway, config.dnsmasq.dhcp_range)
+bind-interfaces""".format(config.dnsmasq.gateway, config.dnsmasq.dhcp_range, config.hostapd.gateway)
 
     with open(CONF_FILE, 'w+') as f:
         f.write(config_file)
