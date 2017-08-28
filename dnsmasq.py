@@ -24,7 +24,7 @@ bind-interfaces""".format(config.dnsmasq.gateway, config.dnsmasq.dhcp_range, con
     with open(CONF_FILE, 'w+') as f:
         f.write(config_file)
 
-    process = sp.Popen(['dnsmasq', '-k', '-C', CONF_FILE], stdout=sp.PIPE)
+    process = sp.Popen(['dnsmasq', '-k', '-C', CONF_FILE], stdout=sp.PIPE, stderr=sp.PIPE)
 
 def stop():
     process.kill()

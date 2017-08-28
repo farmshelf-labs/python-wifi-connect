@@ -21,7 +21,6 @@ wmm_enabled=0
         f.write(conf_file)
 
     process = sp.Popen(['hostapd', CONF_FILE], stdout=sp.PIPE, stderr=sp.PIPE)
-    print(process.poll())
 
 def stop():
     process.kill()
