@@ -19,7 +19,7 @@ dhcp-range={1}
 dhcp-option=3,{0}
 dhcp-option=6,{0}
 dhcp-authoritative
-bind-interfaces""".format(config.dnsmasq.gateway, config.dnsmasq.dhcp_range, config.hostapd.gateway)
+bind-interfaces""".format(config.dnsmasq.gateway, config.dnsmasq.dhcp_range, config.hostapd.iface)
 
     with open(CONF_FILE, 'w+') as f:
         f.write(config_file)
