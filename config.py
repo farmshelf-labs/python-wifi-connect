@@ -1,12 +1,12 @@
+import os
+from collections import namedtuple
+
 try:
     import ConfigParser as parser
 except ModuleNotFoundError:
     import configparser as parser
 
-import os
-from collections import namedtuple
-
-CONF_FILE = os.environ('PYTHON_WIFI_CONNECT_CONF') if 'PYTHON_WIFI_CONNECT_CONF' in os.environ else './pwc.conf'
+CONF_FILE = os.environ['PYTHON_WIFI_CONNECT_CONF'] if 'PYTHON_WIFI_CONNECT_CONF' in os.environ else os.path.dirname(__file__) + '/pwc.conf'
 
 HOSTAPD_PROPS = ['iface', 'ssid', 'psk']
 DNSMASQ_PROPS = ['gateway', 'dhcp_range']
