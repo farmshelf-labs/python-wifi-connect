@@ -61,7 +61,7 @@ def conn_active():
     # check active connection
     import NetworkManager as nm
 
-    conns = filter(lambda c: c.Id == CONNECTION_ID, nm.NetworkManager.ActiveConnections)
+    conns = list(filter(lambda c: c.Id == CONNECTION_ID, nm.NetworkManager.ActiveConnections))
 
     try:
         if len(conns) > 0:
