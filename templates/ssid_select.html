@@ -2,16 +2,76 @@
 <html>
   <head>
     <title>Farmshelf wifi setup</title>
+    <style type="text/css">
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Lato,Helvetica Neue,Arial,Helvetica,sans-serif;
+      }
+      #header {
+        height: 60px;
+        width: 100%;
+        background: #839c9f;
+        z-index: 5;
+      }
+      #pg-body {
+        margin: 0 auto;
+        width: 85%;
+      }
+      select, input {
+        font-size: 1em;
+        width: 200px;
+      }
+      select {
+        background: none;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .field {
+        margin: 10px;
+      }
+      button {
+        background: #839c9f;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        font-size: 1em;
+        border-radius: 5px;
+      }
+      img {
+        height: 80%;
+        margin-top: 6px;
+        left: 10px;
+        position: relative;
+      }
+    </style>
   </head>
   <body>
-    <h1>Farmshelf wifi setup</h1>
-    <form>
-      <select>
-        {% for ssid in ssids %}
-          <option value="{{ ssid[0] }}">{{ ssid[0] }}</option>
-        {% endfor %}
-      </select>
-      <button type="submit">Go</button>
-    <form>
+    <div id="header">
+      <img src="/public/fs-tree.white.svg" />
+    </div>
+    <div id="pg-body">
+      <h1>Farmshelf wifi setup</h1>
+      <form action="/ssid_select" method="POST">
+        <div class="field">
+          <label>SSID</label>
+          <select name="ssid">
+            {% for ssid in ssids %}
+              <option value="{{ ssid }}">{{ ssid }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="psk" />
+        </div>
+        <div class="field">
+          <button type="submit">Go</button>
+        </div>
+      </form>
+    </div>
   </body>
 </html>
+

@@ -1,13 +1,22 @@
 import config
-
-import NetworkManger as nm
+import re
+import subprocess as sp
 
 def scan():
-    ssids = []
-    for dev in nm.NetworkManger.GetDevices():
-        if dev.DeviceType != nm.NM_DEVICE_TYPE_WIFI:
-            continue
-        for ap in dev.GetAccessPoints():
-            ssids.append(ap.Ssid, ap.Frequency, ap.Strength)
+    ssids = set()
+    ssid_re = '.*SSID: (.*)'
+    signal_re = 'signal: ([-+]?\d*\.\d+|\d+)'
 
-    return sorted(ssids, key=lambda s: s[2])
+    process = sp.Popen(['iw', config.hostapd.iface, 'scan', 'ap-force'], stdout=sp.PIPE)
+    stdout, _ = process.communicate()
+    for line in stdout.split('\n'):
+        ssid_mt = re.search(ssid_re, line)
+        signal_mt = re.search(signal_re, line)
+        if ssid_mt:
+            ssid = ssid_mt.groups()[0]
+            if ssid:
+                ssids.add(ssid)
+
+
+
+    return sorted(list(ssids))
