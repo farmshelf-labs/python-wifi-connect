@@ -23,7 +23,7 @@ def save_config(ssid, psk):
     reload(nm)
 
     for dev in nm.NetworkManager.GetDevices():
-        if dev.DeviceType == nm.NM_DEVICE_TYPE_WIFI:
+        if dev.DeviceType == nm.NM_DEVICE_TYPE_WIFI and dev.Interface == config.hostapd.iface:
             device = dev
             break
 
@@ -52,6 +52,7 @@ def save_config(ssid, psk):
 
 def stop_nm():
     manager.StopUnit(DBUS_NETWORK_MANAGER, 'fail')
+     #TODO wait for it to actually stop
 
 def set_iface():
     process = sp.Popen(['ifconfig', config.hostapd.iface, '{}/24'.format(config.dnsmasq.gateway), 'up'])
