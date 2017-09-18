@@ -2,6 +2,7 @@ import config
 import time
 import dbus
 import uuid
+from importlib import reload
 import subprocess as sp
 
 device = None
