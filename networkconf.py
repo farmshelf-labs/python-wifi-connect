@@ -63,14 +63,14 @@ def conn_active():
     # check active connection
     import NetworkManager as nm
 
-    conns = list(filter(lambda c: c.Id == CONNECTION_ID, nm.NetworkManager.ActiveConnections))
+    conns = nm.NetworkManager.ActiveConnections
 
     try:
         if len(conns) > 0:
-            conn = conns[0]
-            while conn.State == nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATING: pass
+            for conn in conns:
+                while conn.State == nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATING: pass
 
-            return conn.State == nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATED
+                return conn.State == nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATED
         else:
             return False
     except nm.ObjectVanished:
