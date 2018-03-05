@@ -8,7 +8,7 @@ except ModuleNotFoundError:
 
 CONF_FILE = os.environ['PYTHON_WIFI_CONNECT_CONF'] if 'PYTHON_WIFI_CONNECT_CONF' in os.environ else os.path.dirname(__file__) + '/pwc_default.conf'
 
-HOSTAPD_PROPS = ['iface', 'ssid', 'psk']
+HOSTAPD_PROPS = ['iface', 'ssid', 'psk', 'ssid_randomize']
 DNSMASQ_PROPS = ['gateway', 'dhcp_range']
 
 config = parser.ConfigParser()

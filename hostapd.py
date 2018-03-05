@@ -1,4 +1,5 @@
 import config
+import random
 import time
 import subprocess as sp
 
@@ -8,6 +9,11 @@ process = None
 
 def start():
     global process
+    if config.hostapd.ssid_randomize:
+        ssid = config.hostapd.ssid + '_' + random.randint(1, 1000)
+    else:
+        ssid = config.hostapd.ssid
+
     conf_file = """
 interface={}
 ssid={}
@@ -15,7 +21,7 @@ hw_mode=g
 channel=6
 auth_algs=1
 wmm_enabled=0
-""".format(config.hostapd.iface, config.hostapd.ssid)
+""".format(config.hostapd.iface, ssid)
 
     with open(CONF_FILE, 'w+') as f:
         f.write(conf_file)

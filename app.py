@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, send_from_directory
 import time
 
 import scan_wifi
@@ -29,13 +29,13 @@ def ssid_select():
 
             return redirect(url_for('ssid_select'))
 
-@app.route('/public/<filepath>')
+@app.route('/public/<path:filepath>')
 def static_file(filepath):
-    return app.send_static_file('public/' + filepath)
+    return send_from_directory('public', filepath)
 
 @app.route('/<path:dummy>')
 def root(dummy):
-    return redirect(url_for('ssid_select'))
+    return redirect('http://1.1.1.1' + url_for('ssid_select'))
 
 def shutdown_server():
     print('Shutting down')

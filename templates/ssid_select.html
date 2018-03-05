@@ -3,11 +3,31 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farmshelf wifi setup</title>
+    <link rel="stylesheet" type="text/css" href="/public/form.css">
+    <link rel="stylesheet" type="text/css" href="/public/button.css">
+    <link rel="stylesheet" type="text/css" href="/public/dropdown.css">
     <style type="text/css">
       html, body {
         margin: 0;
         padding: 0;
         font-family: Lato,Helvetica Neue,Arial,Helvetica,sans-serif;
+        height: 100%;
+      }
+      #overlay {
+        height: 100%;
+        width: 100%;
+        opacity: 0.7;
+        background-color: black;
+        position: absolute;
+        display: none;
+        z-index: 10000;
+      }
+      #overlay-txt {
+        position: relative;
+        top: 50%;
+        margin-top: -20px;
+        color: white;
+        text-align: center;
       }
       #header {
         height: 60px;
@@ -17,14 +37,14 @@
       }
       #pg-body {
         margin: 0 auto;
-        width: 85%;
+        width: 65%;
+        max-width: 450px;
+      }
+      #pg-body.loading {
+
       }
       select, input {
-        font-size: 1em;
-        width: 200px;
-      }
-      select {
-        background: none;
+        min-width: 200px;
       }
       label {
         display: block;
@@ -48,17 +68,37 @@
         position: relative;
       }
     </style>
+  <script>
+    function updateLoadingText() {
+      var txt = document.getElementById('overlay-txt');
+      var curr = txt.textContent;
+      if (curr.length > 11) {
+        curr = "Loading";
+      } else {
+        curr += "."
+      }
+      txt.textContent = curr;
+    }
+    function doSubmit() {
+      var el = document.getElementById('overlay');
+      el.setAttribute("style", "display:block")
+      setInterval(updateLoadingText, 600);
+      return false;
+    }
+  </script>
   </head>
   <body>
+    <div id="overlay" display="none"><h1 id="overlay-txt">Loading</h1></div>
     <div id="header">
       <img src="/public/fs-tree.white.svg" />
     </div>
     <div id="pg-body">
       <h1>Farmshelf wifi setup</h1>
-      <form action="/ssid_select" method="POST">
+      <form class="ui form" action="/ssid_select" method="POST" onsubmit="return doSubmit()">
         <div class="field">
           <label>SSID</label>
-          <select name="ssid">
+          <select class="ui selection dropdown" name="ssid" placeholder="Select network name">
+            <option disabled selected value="">Select network name</option>
             {% for ssid in ssids %}
               <option value="{{ ssid }}">{{ ssid }}</option>
             {% endfor %}
@@ -66,11 +106,9 @@
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="psk" />
+          <input type="password" name="psk" placeholder="Enter network password" />
         </div>
-        <div class="field">
-          <button type="submit">Go</button>
-        </div>
+        <button class="ui button" type="submit">Go</button>
       </form>
     </div>
   </body>
