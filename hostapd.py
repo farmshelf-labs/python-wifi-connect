@@ -10,7 +10,7 @@ process = None
 def start():
     global process
     if config.hostapd.ssid_randomize:
-        ssid = config.hostapd.ssid + '_' + random.randint(1, 1000)
+        ssid = config.hostapd.ssid + '_' + str(random.randint(1, 1000))
     else:
         ssid = config.hostapd.ssid
 

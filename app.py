@@ -35,7 +35,7 @@ def static_file(filepath):
 
 @app.route('/<path:dummy>')
 def root(dummy):
-    return redirect('http://1.1.1.1' + url_for('ssid_select'))
+    return redirect('http://farmshelf-setup.com' + url_for('ssid_select'))
 
 def shutdown_server():
     print('Shutting down')
