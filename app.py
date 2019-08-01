@@ -5,6 +5,7 @@ import scan_wifi
 import hostapd
 import dnsmasq
 import networkconf
+from util import write_lcd, release_lcd
 
 app = Flask(__name__)
 
@@ -15,17 +16,29 @@ def ssid_select():
     if request.method == 'GET':
         return render_template('ssid_select.html', ssids=ssids)
     else:
-        ssid = request.form['ssid']
-        psk = request.form['psk']
-        networkconf.save_config(ssid, psk)
-        if networkconf.conn_active():
+        if 'ssid' in request.form:
+            ssid = request.form['ssid'].strip()
+        elif 'ssid-hidden' in request.form:
+            ssid = request.form['ssid-hidden'].strip()
+        else: ssid = 'NONE'
+
+        psk = request.form['psk'].strip()
+        hidden = 'hidden' in request.form
+
+        write_lcd('Trying to connect:\n{}'.format(ssid))
+        ret = networkconf.save_config(ssid, psk, hidden)
+        if ret and networkconf.conn_active():
+            write_lcd('Success! Connected:\n{}'.format(ssid))
+
             shutdown_server()
+            time.sleep(4)
             return 'OK'
         else:
             networkconf.stop_nm()
             networkconf.set_iface()
             hostapd.restart()
             dnsmasq.restart()
+            write_lcd('Connection failed:\nTrying again'.format(ssid))
 
             return redirect(url_for('ssid_select'))
 
@@ -56,8 +69,9 @@ def main():
     dnsmasq.start()
 
 if __name__ == '__main__':
-    if networkconf.conn_active():
-        print('Network is configured, continuing start up')
-    else:
+    try:
         main()
         app.run(host="0.0.0.0", port=80)
+    finally:
+        release_lcd()
+        networkconf.start_nm()

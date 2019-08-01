@@ -12,6 +12,10 @@
         padding: 0;
         font-family: Lato,Helvetica Neue,Arial,Helvetica,sans-serif;
         height: 100%;
+        font-size: 16px;
+      }
+      input {
+        font-size: 16px;
       }
       #overlay {
         height: 100%;
@@ -46,9 +50,13 @@
       select, input {
         min-width: 200px;
       }
+      input[type="checkbox"] {
+        min-width: 0;
+      }
       label {
         display: block;
         margin-bottom: 5px;
+        font-weight: bold;
       }
       .field {
         margin: 10px;
@@ -85,6 +93,16 @@
       setInterval(updateLoadingText, 600);
       return true;
     }
+
+    function showpass(el) {
+      var pass = document.getElementById('passfield')
+      if (el.checked) {
+        pass.type = 'text'
+      } else {
+        pass.type = 'password'
+      }
+
+    }
   </script>
   </head>
   <body>
@@ -103,10 +121,23 @@
               <option value="{{ ssid }}">{{ ssid }}</option>
             {% endfor %}
           </select>
+
+          <p>If you do not see the SSID in the above list, enter it here:</p>
+          <input type='text' placeholder='Hidden network name' name='ssid-hidden' />
         </div>
+        <br/>
+        <br/>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="psk" placeholder="Enter network password" />
+          <input type="password" id="passfield" name="psk" placeholder="Enter network password" />
+          <input onclick="showpass(this)" type="checkbox" name="showp" />
+          <label style="display:inline">Show password</label>
+        </div>
+        <br/>
+        <br/>
+        <div class="field">
+          <label style="display:inline">Hidden network?</label>
+          <input type="checkbox" name="hidden" />
         </div>
         <button class="ui button" type="submit">Go</button>
       </form>

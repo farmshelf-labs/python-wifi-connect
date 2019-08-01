@@ -14,9 +14,17 @@ attempts = 0
 def start():
     global process
     global attempts
+
+    fsid = str(random.randint(1, 1000))
+    try:
+        with open('/data/config/FSID.txt', 'r') as ff:
+            fsid = ff.read().strip()
+    except:
+        fsid = str(random.randint(1, 1000))
+
+
     if config.hostapd.ssid_randomize:
-        addon = os.environ['RESIN_DEVICE_NAME_AT_INIT'] if 'RESIN_DEVICE_NAME_AT_INIT' in os.environ else str(random.randint(1, 1000))
-        ssid = config.hostapd.ssid + '_' + addon
+        ssid = config.hostapd.ssid + '_' + fsid
     else:
         ssid = config.hostapd.ssid
 
@@ -31,6 +39,9 @@ wmm_enabled=0
 
     with open(CONF_FILE, 'w+') as f:
         f.write(conf_file)
+
+    with open('/tmp/farmware-lcdmsg', 'w+') as ff:
+        ff.write('Broadcasting setup:\n{}'.format(ssid))
 
     process = sp.Popen(['hostapd', CONF_FILE], stdout=sp.PIPE, stderr=sp.PIPE)
     time.sleep(2)

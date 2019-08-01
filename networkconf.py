@@ -14,9 +14,8 @@ manager = dbus.Interface(systemd1, 'org.freedesktop.systemd1.Manager')
 
 DBUS_NETWORK_MANAGER = 'NetworkManager.service'
 CONNECTION_ID        = 'fshelf-wifi'
-CONNECTION_UUID      = '3a5538c8-4bab-465e-837d-80ccf8bf1e48'
 
-def save_config(ssid, psk):
+def save_config(ssid, psk, hidden=False):
     manager.StartUnit(DBUS_NETWORK_MANAGER, 'fail')
     time.sleep(2)
 
@@ -28,32 +27,47 @@ def save_config(ssid, psk):
             device = dev
             break
 
+    keymgmt = ('none' if len(psk) == 0 else 'wpa-psk')
+
+    _uuid = str(uuid.uuid4())
     conn = {
         '802-11-wireless': {
              'mode': 'infrastructure',
              'security': '802-11-wireless-security',
-             'ssid': str(ssid)
+             'ssid': str(ssid),
+             'hidden': hidden
              },
         '802-11-wireless-security': {
-            'auth-alg': 'open',
-            'key-mgmt': 'wpa-psk',
-            'psk': str(psk)
+            'auth-alg': 'open'
             },
         'connection': {
-            'id': CONNECTION_ID,
+            'id': CONNECTION_ID + '-{}'.format(ssid),
             'type': '802-11-wireless',
-            'uuid': str(uuid.uuid4())
+            'uuid': _uuid
             },
         'ipv4': {'method': 'auto'},
         'ipv6': {'method': 'auto'}
     }
 
-    conn = nm.Settings.AddConnection(conn)
-    nm.NetworkManager.ActivateConnection(conn, device, "/")
+    if len(psk) > 0:
+        conn['802-11-wireless-security']['key-mgmt'] = 'wpa-psk'
+        conn['802-11-wireless-security']['psk'] = psk
+    else:
+        conn['802-11-wireless-security']['key-mgmt'] = 'none'
+
+    try:
+        conn = nm.Settings.AddConnection(conn)
+        nm.NetworkManager.ActivateConnection(conn, device, "/")
+        return True
+    except dbus.exceptions.DBusException:
+        return False
 
 def stop_nm():
     manager.StopUnit(DBUS_NETWORK_MANAGER, 'fail')
      #TODO wait for it to actually stop
+
+def start_nm():
+    manager.StartUnit(DBUS_NETWORK_MANAGER, 'fail')
 
 def set_iface():
     process = sp.Popen(['ifconfig', config.hostapd.iface, '{}/24'.format(config.dnsmasq.gateway), 'up'])
