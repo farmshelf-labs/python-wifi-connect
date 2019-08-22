@@ -53,7 +53,8 @@ def save_config(ssid, psk, hidden=False):
         conn['802-11-wireless-security']['key-mgmt'] = 'wpa-psk'
         conn['802-11-wireless-security']['psk'] = psk
     else:
-        conn['802-11-wireless-security']['key-mgmt'] = 'none'
+        conn.pop('802-11-wireless-security')
+
 
     try:
         conn = nm.Settings.AddConnection(conn)
