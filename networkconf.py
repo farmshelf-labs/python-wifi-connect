@@ -58,8 +58,15 @@ def save_config(ssid, psk, hidden=False):
 
     try:
         conn = nm.Settings.AddConnection(conn)
-        nm.NetworkManager.ActivateConnection(conn, device, "/")
-        return True
+        conatmps = 5
+        while conatmps > 0:
+            try:
+                nm.NetworkManager.ActivateConnection(conn, device, "/")
+                return True
+            except:
+                conatmps -= 1
+                sleep(0.5)
+        return False
     except dbus.exceptions.DBusException:
         return False
 
