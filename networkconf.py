@@ -65,7 +65,7 @@ def save_config(ssid, psk, hidden=False):
                 return True
             except:
                 conatmps -= 1
-                sleep(0.5)
+                time.sleep(0.5)
         return False
     except dbus.exceptions.DBusException:
         return False
