@@ -35,6 +35,10 @@ hw_mode=g
 channel=6
 auth_algs=1
 wmm_enabled=0
+logger_syslog=-1
+logger_syslog_level=4
+logger_stdout=-1
+logger_stdout_level=4
 """.format(config.hostapd.iface, ssid)
 
     with open(CONF_FILE, 'w+') as f:
